@@ -55,7 +55,6 @@ func CreateClient(w http.ResponseWriter, r *http.Request) {
 
 	if result.Error != nil {
 
-		//http.Error(w, "Erreur lors de la création du client", http.StatusInternalServerError)
 		http.Error(w, "Erreur lors de la création du client: "+result.Error.Error(), http.StatusInternalServerError)
 
 		return
