@@ -3,19 +3,22 @@ package Database
 import (
 	"AUTH-SERVICE/src/Models"
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"os"
 )
 
 var DB *gorm.DB
 
-func InitialiserBaseDeDonnees() {
+func InitializeDatabase() {
 	err := godotenv.Load()
 	if err != nil {
-		panic("Error loading .env file")
+		log.Fatal("Error loading .env file")
 	}
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
@@ -26,14 +29,14 @@ func InitialiserBaseDeDonnees() {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("Impossible de se connecter à la base de données")
+		log.Fatal("Unable to connect to the database")
 	}
-	DB = db
-	fmt.Println("Connecté à la base de données")
-	//err = db.Table("client").AutoMigrate(&Models.Client{})
-	//if err != nil {
-	//panic("Erreur lors de la migration de la table 'client'")
-	//}
-	db.AutoMigrate(&Models.Client{})
 
+	DB = db
+	fmt.Println("Connected to the database")
+
+	err = db.AutoMigrate(&Models.Client{})
+	if err != nil {
+		log.Fatal("Error during migration of the 'client' table")
+	}
 }

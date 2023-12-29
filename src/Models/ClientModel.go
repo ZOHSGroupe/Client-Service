@@ -19,3 +19,7 @@ type Client struct {
 	Status               string `json:"status"`
 	Address              string `json:"address"`
 }
+
+func (c *Client) TableName() string {
+	return "client"
+}

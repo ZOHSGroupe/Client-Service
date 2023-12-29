@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  # MySQL service
+  mysql_db:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASSWORD
+    ports:
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Node API service
+  api:
+    build: .
+    ports:
+      # local->container
+      - $GO_LOCAL_PORT:$GO_DOCKER_PORT
+    environment:
+      PORT: $GO_DOCKER_PORT
+      DB_HOST: mysql_db
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_NAME: $DB_NAME
+      MYSQL_URI: "mysql://$DB_USER:$DB_PASSWORD@mysql_db:3306/$DB_NAME"
+    depends_on:
+      - mysql_db
+
+volumes:
+  mysql_data: {}
