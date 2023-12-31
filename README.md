@@ -33,6 +33,6 @@ $ docker compose up
 
 ## License
 
-Auth-Service is [MIT licensed](LICENSE).
+Client-Service is [MIT licensed](LICENSE).
 
 
