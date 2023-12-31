@@ -13,6 +13,6 @@ func main() {
 
 	Database.InitializeDatabase()
 	router := Routes.InitialiserRoutes()
-	fmt.Println("Serveur écoutant sur le port :5000...")
-	log.Fatal(http.ListenAndServe("localhost:"+os.Getenv("PORT"), router))
+	fmt.Println("Serveur écoutant sur le port :" + os.Getenv("GO_DOCKER_PORT"))
+	log.Fatal(http.ListenAndServe("localhost:"+os.Getenv("GO_DOCKER_PORT"), router))
 }
