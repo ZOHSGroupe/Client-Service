@@ -27,9 +27,27 @@ $ docker run -p 5000:5000 client-service
 $ docker compose up
 ```
 
+## Models
+
+### Client
+
+- `ID: string` - Unique identifier for the client.
+- `FirstName: string` - First name of the client.
+- `LastName: string` - Last name of the client.
+- `NationalID: string` - National ID of the client.
+- `Email: string` - Email address of the client.
+- `BirthDate: string` - Birth date of the client.
+- `City: string` - City of the client.
+- `Nationality: string` - Nationality of the client.
+- `Gender: string` - Gender of the client.
+- `CreateDate: string` - Date of client creation.
+- `LastModificationDate: string` - Date of the last modification.
+- `Status: string` - Status of the client.
+- `Address: string` - Address of the client.
+
 ## Available Endpoints
 
-### GetClients
+### 1.GetClients
 
 - **Endpoint:** `/client`
 - **Method:** GET
@@ -38,7 +56,7 @@ $ docker compose up
   - `200`: Successful retrieval with an array of all clients.
   - `500`: Internal Server Error.
 
-### GetClient
+### 2.GetClient
 
 - **Endpoint:** `/client/{id}`
 - **Method:** GET
@@ -47,7 +65,7 @@ $ docker compose up
   - `200`: Successful retrieval with client details.
   - `404`: Client not found.
 
-### CreateClient
+### 3.CreateClient
 
 - **Endpoint:** `/client`
 - **Method:** POST
@@ -58,7 +76,7 @@ $ docker compose up
   - `201`: Client created successfully with client details.
   - `500`: Internal Server Error.
 
-### UpdateClient
+### 4.UpdateClient
 
 - **Endpoint:** `/client/{id}`
 - **Method:** PUT
@@ -69,7 +87,7 @@ $ docker compose up
   - `200`: Client updated successfully.
   - `500`: Internal Server Error.
 
-### DeleteClient
+### 5.DeleteClient
 
 - **Endpoint:** `/client/{id}`
 - **Method:** DELETE
