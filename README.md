@@ -106,6 +106,6 @@ $ docker compose up
 
 ## License
 
-Client-Service is [MIT licensed](LICENSE).
+Client-Service is [GPL licensed](LICENSE).
 
 
