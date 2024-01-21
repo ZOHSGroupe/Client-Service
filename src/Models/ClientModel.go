@@ -18,6 +18,7 @@ type Client struct {
 	LastModificationDate string `json:"lastModificationDate" validate:"require,date"`
 	Status               string `json:"status"`
 	Address              string `json:"address"`
+	Tel                  string `json:"tel"`
 }
 
 func (c *Client) TableName() string {
