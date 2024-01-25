@@ -5,15 +5,20 @@ import (
 	"AUTH-SERVICE/src/Models"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	_ "github.com/gorilla/mux"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 var client []Models.Client
 
+func GetTest(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode("client service work")
+}
 func GetClients(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	client := []Models.Client{}
@@ -51,23 +56,45 @@ func GetClient(w http.ResponseWriter, r *http.Request) {
 func CreateClient(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var Client Models.Client
-	err := json.NewDecoder(r.Body).Decode(&Client)
+	var newClient Models.Client
+	err := json.NewDecoder(r.Body).Decode(&newClient)
 	if err != nil {
-		http.Error(w, "Erreur lors de la lecture du corps de la requête", http.StatusBadRequest)
+		http.Error(w, "Error decoding request body", http.StatusBadRequest)
 		return
 	}
 
-	Client.ID = uuid.New().String()
-	result := Database.DB.Create(&Client)
+	// Check if a client with the same email exists
+	existingEmailClient := Models.Client{}
+	if err := Database.DB.Where("email = ?", newClient.Email).First(&existingEmailClient).Error; err == nil {
+		http.Error(w, "A client with the same email already exists", http.StatusBadRequest)
+		return
+	}
 
+	// Check if a client with the same national ID exists
+	existingNationalIDClient := Models.Client{}
+	if err := Database.DB.Where("national_id = ?", newClient.NationalID).First(&existingNationalIDClient).Error; err == nil {
+		http.Error(w, "A client with the same national ID already exists", http.StatusBadRequest)
+		return
+	}
+
+	// Initialize CreateDate and LastModificationDate with the current date
+	currentDate := time.Now().Format("2006-01-02")
+	newClient.CreateDate = currentDate
+	newClient.LastModificationDate = currentDate
+
+	// Generate a new UUID for the client
+	newClient.ID = uuid.New().String()
+
+	// Create the new client in the database
+	result := Database.DB.Create(&newClient)
 	if result.Error != nil {
-		http.Error(w, "Erreur lors de la création du client: "+result.Error.Error(), http.StatusInternalServerError)
+		http.Error(w, "Error creating the client: "+result.Error.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// Respond with the newly created client
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(Client)
+	json.NewEncoder(w).Encode(newClient)
 }
 
 func UpdateClient(w http.ResponseWriter, r *http.Request) {
