@@ -31,22 +31,25 @@ services:
       MYSQL_URI: "mysql://$DB_USER:$DB_PASSWORD@mysql_db:3306/$DB_NAME"
     depends_on:
       - mysql_db
-    # Discovery service (Eureka)
+      - discovery-service
+
+  # Discovery service (Eureka)
   discovery-service:
-      image: eureka:latest
-      container_name: eureka
-      ports:
-        - "8761:8761"
+    image: eureka:latest
+    container_name: eureka
+    ports:
+      - "8761:8761"
 
-
-    # API Gateway service
+  # API Gateway service
   API-GATEWAY-SERVICE:
-        image: api-gateway:latest
-        container_name: api-gateway
-        ports:
-          - "8081:8081"
-        depends_on:
-          - discovery-service
-          - api
+    image: api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discovery-service
+      - api
+
 volumes:
   mysql_data: {}
+
