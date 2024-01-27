@@ -94,7 +94,8 @@ func CreateClient(w http.ResponseWriter, r *http.Request) {
 
 	// Respond with the newly created client
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newClient)
+	response := map[string]string{"id": newClient.ID}
+	json.NewEncoder(w).Encode(response)
 }
 
 func UpdateClient(w http.ResponseWriter, r *http.Request) {

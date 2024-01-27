@@ -17,7 +17,6 @@ func InitialiserRoutes() *mux.Router {
 	router.HandleFunc("/client", Controllers.CreateClient).Methods("POST")
 	router.HandleFunc("/client/{id}", Controllers.UpdateClient).Methods("PUT")
 	router.HandleFunc("/client/{id}", Controllers.DeleteClient).Methods("DELETE")
-	// Apply the middleware globally for all routes
-	// router.Use(middlewares.VerifyToken())
+
 	return router
 }

@@ -16,11 +16,13 @@ func main() {
 	Database.InitializeDatabase()
 	router := Routes.InitialiserRoutes()
 	// Enable CORS for all routes
-	handlers.CORS(
-		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
-		handlers.AllowedOrigins([]string{"*"}), // Update this with your specific allowed origins
-	)(router)
+	// Set up CORS middleware
+	headersOk := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
+
+	// Start the server with CORS middleware
+	http.ListenAndServe(":"+os.Getenv("GO_DOCKER_PORT"), handlers.CORS(originsOk, headersOk, methodsOk)(router))
 
 	fmt.Println("Serveur écoutant sur le port :" + os.Getenv("GO_DOCKER_PORT"))
 	log.Fatal(http.ListenAndServe("localhost:"+os.Getenv("GO_DOCKER_PORT"), router))
